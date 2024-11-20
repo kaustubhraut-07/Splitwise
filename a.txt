@@ -1,0 +1,4 @@
+User: For authentication and user profiles.
+Group: To group users for shared expenses.
+Expense: To record expenses with details of who paid and who owes.
+Settlement: To track settlements between users.
