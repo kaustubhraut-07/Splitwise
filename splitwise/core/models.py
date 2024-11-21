@@ -11,7 +11,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'  
     REQUIRED_FIELDS = ['name'] 
 
-    def __self__(self):
+    def __self__(self):        
         return self.name
 
 

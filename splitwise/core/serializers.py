@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = all
+        fields = ['name', 'users' , 'id']
 
     def __str__(self):
         return self.name
