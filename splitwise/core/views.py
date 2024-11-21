@@ -190,3 +190,85 @@ def create_expense(request):
         "message": "Expense created successfully",
         "data": seraliser.data    
     }, status=201)
+
+@api_view(['PUT'])
+def add_users_to_expense(request,id):
+    expense = Expense.objects.get(id=id)
+    user_info = request.data.get('user_info')
+
+   
+    if not expense:
+        return Response({
+            "error": "Expense not found"
+        }, status=400)
+    expense.users.add(user_info)
+    seraliser = ExpenseSerializer(expense)
+
+    return Response({
+        "message": "Expense found successfully",
+        "data": seraliser.data    
+    }, status=201)
+
+
+@api_view(['GET'])
+def get_expense_info(request,id):
+    expense = Expense.objects.get(id=id)
+    if not expense:
+        return Response({
+            "error": "Expense not found"
+        }, status=400)
+    seraliser = ExpenseSerializer(expense)
+
+    return Response({
+        "message": "Expense found successfully",
+        "data": seraliser.data    
+    }, status=201)
+
+@api_view(['GET'])
+def get_expense_for_perticular_user(request,id):
+    expense = Expense.objects.filter(paid_by=id)
+    if not expense:
+        return Response({
+            "error": "Expense not found"
+        }, status=400)
+    seraliser = ExpenseSerializer(expense, many=True)
+
+    return Response({
+        "message": "Expense found successfully",
+        "data": seraliser.data    
+    }, status=201)
+
+
+@api_view(['PUT'])
+def update_expense(request,id):
+    expense = Expense.objects.get(id=id)
+    expense_name = request.data.get('expense_name')
+    expense_amount = request.data.get('expense_amount')
+
+    if not expense:
+        return Response({
+            "error": "Expense not found"
+        }, status=400)
+    expense.name = expense_name
+    expense.amount = expense_amount
+    expense.save()
+    seraliser = ExpenseSerializer(expense)
+
+    return Response({
+        "message": "Expense found successfully",
+        "data": seraliser.data    
+    }, status=201)
+
+
+@api_view(['DELETE'])
+def delete_expense(request,id):
+    expense = Expense.objects.get(id=id)
+    if not expense:
+        return Response({
+            "error": "Expense not found"
+        }, status=400)
+    expense.delete()
+    return Response({
+        "message": "Expense deleted successfully"
+    }, status=201)
+
