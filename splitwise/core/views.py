@@ -44,4 +44,35 @@ def update_userinfo(request,id):
     }, status=400)
 
 
+@api_view(['GET'])
+def getuser_Info(request,id):
+    persentUser = User.objects.get(id=id)
+    serializer = UserSerializer(persentUser)
+
+    if(persentUser):
+        return Response({
+            "message": "User found successfully",
+            "data": serializer.data
+        }, status=201)
+    
+    return Response({
+        "error": "User not found"
+    }, status=400)
+   
+
+
+@api_view(['DELETE'])
+def deleteuser_Info(request,id):
+    persentUser = User.objects.get(id=id)
+    seraliser  = UserSerializer(persentUser)
+    if(persentUser):
+        persentUser.delete()
+        return Response({
+            "message": "User deleted successfully",
+            "data": seraliser.data
+        }, status=201)
+    
+    return Response({
+        "error": "User not found"
+    }, status=400)
     
