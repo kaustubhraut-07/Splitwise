@@ -1,4 +1,4 @@
-from .views import user_login ,update_userinfo,getuser_Info,deleteuser_Info , create_group,get_group_user_present,get_groups,add_user_to_group,delete_group,create_expense,get_expense_info,update_expense,delete_expense,get_expense_for_perticular_user
+from .views import user_login ,update_userinfo,getuser_Info,deleteuser_Info , create_group,get_group_user_present,get_groups,add_user_to_group,delete_group,create_expense,get_expense_info,update_expense,delete_expense,get_expense_for_perticular_user,user_settlement_with_other_user
 from django.urls import path
 
 urlpatterns = [
@@ -26,4 +26,5 @@ urlpatterns = [
 
 
 # -----------settlement api endp points----------------
+    path('settlement/<id>/', user_settlement_with_other_user, name='settlement'),
 ]

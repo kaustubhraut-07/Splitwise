@@ -54,7 +54,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 class SettlementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Settlement
-        fields = all
+        fields = ['amount', 'paid_by', 'paid_to', 'group' , 'created_at'  , 'notes' , 'id']
 
     def __str__(self):
         return f"Settlement of {self.amount} from {self.paid_by} to {self.paid_to}"

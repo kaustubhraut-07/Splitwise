@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import UserSerializer,GroupSerializer,ExpenseSerializer
-from .models import User, Group,Expense
+from .serializers import UserSerializer,GroupSerializer,ExpenseSerializer, SettlementSerializer
+from .models import User, Group,Expense,Settlement
 
 
 
@@ -270,5 +270,59 @@ def delete_expense(request,id):
     expense.delete()
     return Response({
         "message": "Expense deleted successfully"
+    }, status=201)
+
+
+
+# ----------- Settlement apis ----------------
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Expense, Settlement, User
+from .serializers import ExpenseSerializer
+
+@api_view(['POST'])
+def user_settlement_with_other_user(request, id):
+    try:
+       
+        expense = Expense.objects.get(id=id)
+    except Expense.DoesNotExist:
+        return Response({"error": "Expense not found"}, status=404)
+
+    user_paid_to_id = request.data.get('user_paid_to')
+    user_paid_by_id = request.data.get('user_paid_by')
+    amount = request.data.get('amount')
+    notes = request.data.get('notes')
+
+    
+    if not user_paid_to_id or not user_paid_by_id or not amount:
+        return Response({"error": "All fields are required"}, status=400)
+
+    try:
+        
+        user_paid_to = User.objects.get(id=user_paid_to_id)
+        user_paid_by = User.objects.get(id=user_paid_by_id)
+    except User.DoesNotExist:
+        return Response({"error": "Invalid user ID(s) provided"}, status=400)
+
+    
+    settlement = Settlement.objects.create(
+        paid_by=user_paid_by,
+        paid_to=user_paid_to,
+        amount=amount,
+        notes=notes,
+        group=expense.group
+    )
+
+    
+    serializer = ExpenseSerializer(expense)
+
+    update_amount_in_expense = expense.amount - amount
+    expense.amount = update_amount_in_expense
+    expense.save()
+
+    return Response({
+        "message": "Settlement created successfully",
+        "data": serializer.data
     }, status=201)
 
