@@ -5,3 +5,8 @@ Settlement: To track settlements between users.
 
 
 for settlement we needs to update in the group in expenses only right 
+
+
+apis for get all expense in a group 
+get all settltmets in a group 
+et all users in a group

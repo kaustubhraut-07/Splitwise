@@ -326,3 +326,38 @@ def user_settlement_with_other_user(request, id):
         "data": serializer.data
     }, status=201)
 
+
+
+@api_view(['POST'])
+def add_settlement_to_group(request, id):
+    expene = Expense.objects.get(id=id)
+    expensed_added_person_id = request.data.get('expensed_added_person_id')
+
+    if not expene:  
+        return Response({
+            "error": "Expense not found"
+        }, status=400)
+    print(expene.group)
+    group_id= expene.group.id
+    # expense should be equaly divied to the number of user present in a group
+    # we will get all users id in the group if weget the group etails
+
+    group = Group.objects.get(id=group_id)
+    users = group.users.all()
+    amount = expene.amount
+
+    for user in users:
+        user_paid_to = User.objects.get(id=expensed_added_person_id) 
+        user_paid_by = user
+        amount = expene.amount / len(users)
+        Settlement.objects.create(
+            paid_by=user_paid_by,
+            paid_to=user_paid_to,
+            amount=amount,
+            group=group
+
+        )
+
+    return Response({
+        "message": "Settlement created successfully"
+    }, status=201)
