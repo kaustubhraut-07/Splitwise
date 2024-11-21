@@ -11,24 +11,16 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
 
-    def create(self, instance, validated_data):
-      
+    def create(self, validated_data):
+        # Create the user with a hashed password
         user = User(
             name=validated_data['name'],
             email=validated_data['email']
         )
-        user.set_password(validated_data['password']) 
+        user.set_password(validated_data['password'])  # Hash the password
         user.save()
         return user
-    
-    
-        userisPresnent = User.objects.get(email=validated_data['email'])
-        if(userisPresnent):
-            User.objects.filter(email=validated_data['email']).update(name=validated_data['name']) 
-            User.objects.filter(email=validated_data['email']).update(password=validated_data['password'])
-            return "Updated User information"
-        
-        return "User not fount"
+       
 
     
 

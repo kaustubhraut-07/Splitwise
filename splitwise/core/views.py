@@ -14,14 +14,15 @@ def user_login(request):
     serializer = UserSerializer(data=request.data)
     
     if serializer.is_valid():
-        
-        user = serializer.save()
-        user.set_password(serializer.validated_data['password'])  
-        user.save()
+        user = serializer.save()  
         
         return Response({
             "message": "User created successfully",
-            "data": serializer.data  
+            "data": {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email
+            } 
         }, status=201)
     
     return Response({
