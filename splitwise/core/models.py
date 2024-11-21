@@ -4,9 +4,12 @@ from django.core.validators import MinValueValidator
 
 
 class User(AbstractUser):
-    name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=100)
+    username = None
+    name = models.CharField(max_length=100 , null=False, blank=False)
+    email = models.EmailField(unique=True , null=False, blank=False)
+    password = models.CharField(max_length=100, null=False, blank=False)
+    USERNAME_FIELD = 'email'  
+    REQUIRED_FIELDS = ['name'] 
 
     def __self__(self):
         return self.name

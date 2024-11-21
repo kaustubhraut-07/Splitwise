@@ -1,14 +1,22 @@
-from django.shortcuts import render
-from .models import User , Group, Expense, Settlement
-from rest_framework import response
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import UserSerializer
 
-# Create your views here.
-
+@api_view(['POST'])
 def user_login(request):
-    name = request.POST['name']
-    email = request.POST['email']
-    password = request.POST['password']
-
-    user = User.objects.create(name=name, email=email, password=password)
-
-    return response.status_code(200).message("User created successfully")
+    serializer = UserSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        
+        user = serializer.save()
+        user.set_password(serializer.validated_data['password'])  
+        user.save()
+        
+        return Response({
+            "message": "User created successfully",
+            "data": serializer.data  
+        }, status=201)
+    
+    return Response({
+        "error": serializer.errors
+    }, status=400)
