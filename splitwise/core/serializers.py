@@ -45,7 +45,7 @@ class GroupSerializer(serializers.ModelSerializer):
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
-        fields = ['name', 'amount', 'paid_by', 'group']
+        fields = ['name', 'amount', 'paid_by', 'group' , 'created_at' , 'id']
         
     def __str__(self, *args, **kwds):
         return f"{self.name} - {self.amount}"

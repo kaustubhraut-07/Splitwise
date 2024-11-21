@@ -22,7 +22,8 @@ urlpatterns = [
     path('get_expense_info/<id>/', get_expense_info, name='get_expense_info'),
     path('update_expense/<id>/', update_expense, name='update_expense'),
     path('delete_expense/<id>/', delete_expense, name='delete_expense'),
-    path('get_all_expense/<id>/', get_expense_for_perticular_user, name='get_all_expense'),
+    path('get_expense_for_perticular_user/<id>/', get_expense_for_perticular_user, name='get_expense_for_perticular_user'),
 
 
+# -----------settlement api endp points----------------
 ]
