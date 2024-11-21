@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import UserSerializer,GroupSerializer
-from .models import User, Group
+from .serializers import UserSerializer,GroupSerializer,ExpenseSerializer
+from .models import User, Group,Expense
 
 
 
@@ -164,4 +164,29 @@ def delete_group(request,id):
     group.delete()
     return Response({
         "message": "Group deleted successfully"
+    }, status=201)
+
+
+
+#--------------------------------expenses view ---------------------
+
+@api_view(['POST'])
+def create_expense(request):
+
+    #we need group and user info who will add edxpense
+
+    group_id = request.data.get('group_id')
+    expense_name = request.data.get('expense_name')
+    expense_amount = request.data.get('expense_amount')
+    expense_paid_by = request.data.get('expense_paid_by')
+
+    group = Group.objects.get(id=group_id)
+    user = User.objects.get(id=expense_paid_by)
+
+    expense = Expense.objects.create(name=expense_name, amount=expense_amount, paid_by=user, group=group)
+    seraliser = ExpenseSerializer(expense)
+
+    return Response({
+        "message": "Expense created successfully",
+        "data": seraliser.data    
     }, status=201)
