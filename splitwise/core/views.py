@@ -168,6 +168,19 @@ def delete_group(request,id):
     }, status=201)
 
 
+@api_view(['GET'])
+def get_all_users_in_group(request):
+    useringroup = Group.objects.all()
+    if not useringroup:
+        return Response({
+            "error": "Group not found"
+        }, status=400)
+    seraliser = GroupSerializer(useringroup, many=True)
+
+    return Response({
+        "message": "Group found successfully",
+        "data": seraliser.data    
+    }, status=201)
 
 #--------------------------------expenses view ---------------------
 
@@ -273,7 +286,19 @@ def delete_expense(request,id):
         "message": "Expense deleted successfully"
     }, status=201)
 
+@api_view(['GET'])
+def get_all_expenses_in_group(request , id):
+    expense = Expense.objects.filter(group=id)
+    if not expense:
+        return Response({
+            "error": "Expense not found"
+        }, status=400)
+    seraliser = ExpenseSerializer(expense, many=True)
 
+    return Response({
+        "message": "Expense found successfully",
+        "data": seraliser.data    
+    }, status=201)
 
 # ----------- Settlement apis ----------------
 
@@ -361,4 +386,20 @@ def add_settlement_to_group(request, id):
 
     return Response({
         "message": "Settlement created successfully"
+    }, status=201)
+
+
+
+@api_view(['GET'])
+def get_all_settlements_in_group(request , id):
+    settlement = Settlement.objects.filter(group=id)
+    if not settlement:
+        return Response({
+            "error": "Settlement not found"
+        }, status=400)
+    seraliser = SettlementSerializer(settlement, many=True)
+
+    return Response({
+        "message": "Settlement found successfully",
+        "data": seraliser.data    
     }, status=201)
