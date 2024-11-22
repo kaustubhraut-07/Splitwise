@@ -1,9 +1,10 @@
-from .views import user_login ,update_userinfo,getuser_Info,deleteuser_Info , create_group,get_group_user_present,get_groups,add_user_to_group,delete_group,create_expense,get_expense_info,update_expense,delete_expense,get_expense_for_perticular_user,user_settlement_with_other_user,add_settlement_to_group,get_all_users_in_group,get_all_expenses_in_group,get_all_settlements_in_group
+from .views import user_login ,user_registeration ,update_userinfo,getuser_Info,deleteuser_Info , create_group,get_group_user_present,get_groups,add_user_to_group,delete_group,create_expense,get_expense_info,update_expense,delete_expense,get_expense_for_perticular_user,user_settlement_with_other_user,add_settlement_to_group,get_all_users_in_group,get_all_expenses_in_group,get_all_settlements_in_group
 from django.urls import path
 
 urlpatterns = [
 
     #-------------- user apis endpoitns --------------
+    path('user_registeration/', user_registeration, name='user_login'),
     path('user_login/', user_login, name='user_login'),
     path('update_userinfo/<id>/', update_userinfo, name='update_userinfo'),
     path('getuser_Info/<id>/', getuser_Info, name='getuser_Info'),

@@ -6,13 +6,14 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
-
-
+from django.contrib.auth import authenticate, login
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 # ----------------------------user views -----------------------
 @api_view(['POST'])
-def user_login(request):
+def user_registeration(request):
     serializer = UserSerializer(data=request.data)
     
     if serializer.is_valid():
@@ -31,7 +32,16 @@ def user_login(request):
         "error": serializer.errors
     }, status=400)
 
-
+@api_view(['POST'])
+def user_login(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    user = authenticate(request, email=email, password=password)
+    if user is not None:
+        login(request, user)
+        return Response({'message': 'User logged in successfully'})
+    else:
+        return Response({'error': 'Invalid credentials'}, status=400)
 
 @api_view(['PUT'])
 def update_userinfo(request,id):

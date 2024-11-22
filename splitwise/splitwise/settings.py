@@ -36,7 +36,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'core.middleware.UserMiddleware',
+    'core.middleware.api_authentication_middleware',
 ]
 
 ROOT_URLCONF = 'splitwise.urls'
@@ -115,3 +115,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # settings.py
 AUTH_USER_MODEL = 'core.User'
+
+
+AUTHENTICATION_BACKENDS = [
+    'core.backends.EmailBackend', 
+    'django.contrib.auth.backends.ModelBackend',  
+]
