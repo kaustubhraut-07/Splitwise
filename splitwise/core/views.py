@@ -2,7 +2,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import UserSerializer,GroupSerializer,ExpenseSerializer, SettlementSerializer
 from .models import User, Group,Expense,Settlement
-
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 
 
@@ -391,6 +393,8 @@ def add_settlement_to_group(request, id):
 
 
 @api_view(['GET'])
+# @authentication_classes([TokenAuthentication])
+# @permission_classes([IsAuthenticated])
 def get_all_settlements_in_group(request , id):
     settlement = Settlement.objects.filter(group=id)
     if not settlement:
