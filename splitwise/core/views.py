@@ -169,8 +169,8 @@ def delete_group(request,id):
 
 
 @api_view(['GET'])
-def get_all_users_in_group(request):
-    useringroup = Group.objects.all()
+def get_all_users_in_group(request,id):
+    useringroup = Group.objects.filter(id=id)
     if not useringroup:
         return Response({
             "error": "Group not found"
@@ -179,7 +179,7 @@ def get_all_users_in_group(request):
 
     return Response({
         "message": "Group found successfully",
-        "data": seraliser.data    
+        "data": seraliser.data[0]   
     }, status=201)
 
 #--------------------------------expenses view ---------------------
