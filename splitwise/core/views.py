@@ -39,28 +39,55 @@ def user_login(request):
     user = authenticate(request, email=email, password=password)
     if user is not None:
         login(request, user)
-        return Response({'message': 'User logged in successfully'})
+        return Response({'message': 'User logged in successfully' , "data": UserSerializer(user).data})
     else:
         return Response({'error': 'Invalid credentials'}, status=400)
 
 @api_view(['PUT'])
-def update_userinfo(request,id):
-   
-    print(id)
-
-    persentUser = User.objects.get(id=id)
-    if(persentUser):
-        persentUser.name = request.data.get('name')
-        persentUser.email = request.data.get('email')
-        updateduser =  persentUser.save()
+def update_userinfo(request, id):
+    try:
+      
+        persentUser = User.objects.get(id=id)
+    except User.DoesNotExist:
         return Response({
-            "message": "User updated successfully",
-            "data": updateduser
-        }, status=201)
-    
+            "error": "User not found"
+        }, status=404)
+
+   
+    name = request.data.get('name', persentUser.name)  
+    email = request.data.get('email', persentUser.email)  
+    password = request.data.get('password')
+
+
+    persentUser.name = name
+    persentUser.email = email
+    if password:
+        persentUser.set_password(password) 
+
+    persentUser.save()
+
     return Response({
-        "error": "User not found"
-    }, status=400)
+        "message": "User updated successfully",
+        "data": {
+            "id": persentUser.id,
+            "name": persentUser.name,
+            "email": persentUser.email
+        }
+    }, status=200)
+
+    # persentUser = User.objects.get(id=id)
+    # if(persentUser):
+    #     persentUser.name = request.data.get('name')
+    #     persentUser.email = request.data.get('email')
+    #     updateduser =  persentUser.save()
+    #     return Response({
+    #         "message": "User updated successfully",
+    #         "data": updateduser
+    #     }, status=201)
+    
+    # return Response({
+    #     "error": "User not found"
+    # }, status=400)
 
 
 @api_view(['GET'])
