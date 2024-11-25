@@ -1,7 +1,7 @@
 
 
 from pathlib import Path
-
+from corsheaders import defaults
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,11 +24,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'core',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -37,6 +39,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'core.middleware.api_authentication_middleware',
+  
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'splitwise.urls'
@@ -120,4 +124,8 @@ AUTH_USER_MODEL = 'core.User'
 AUTHENTICATION_BACKENDS = [
     'core.backends.EmailBackend', 
     'django.contrib.auth.backends.ModelBackend',  
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  
 ]
