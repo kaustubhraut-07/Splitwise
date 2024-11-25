@@ -12,9 +12,9 @@ def api_authentication_middleware(get_response):
             return get_response(request)
 
         
-        if request.path.startswith('/'):
-            if not request.user.is_authenticated:
-                return JsonResponse({'detail': 'Authentication credentials were not provided.'}, status=401)
+        # if request.path.startswith('/'):
+        #     if not request.user.is_authenticated:
+        #         return JsonResponse({'detail': 'Authentication credentials were not provided.'}, status=401)
 
         response = get_response(request)
         return response
