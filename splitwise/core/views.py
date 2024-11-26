@@ -221,23 +221,28 @@ def get_group_user_present(request, id):
     }, status=200)
 
 @api_view(['PUT'])
-def add_user_to_group(request,id):
-    group = Group.objects.get(id=id)
-    print(group , "group info")
+def add_user_to_group(request, id):
+    
+    group = get_object_or_404(Group, id=id)
+
+    
     user_info = request.data.get('user_info')
+    if not user_info:
+        return Response({"error": "User info is required."}, status=400)
 
-   
-    if not group:
-        return Response({
-            "error": "Group not found"
-        }, status=400)
-    group.users.add(user_info)
+    
+    try:
+        user = User.objects.get(id=user_info)
+    except User.DoesNotExist:
+        return Response({"error": "User not found."}, status=404)
+
+    group.users.add(user)
     group.save()
-    seraliser = GroupSerializer(group)
 
+    serializer = GroupSerializer(group)
     return Response({
-        "message": "Group found successfully",
-        "data": seraliser.data   
+        "message": "User added to group successfully.",
+        "data": serializer.data
     }, status=201)
 
 
