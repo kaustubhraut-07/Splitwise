@@ -2,12 +2,16 @@
 
 from pathlib import Path
 from corsheaders import defaults
+import environ
+
+env = environ.Env()
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(env_file=str(BASE_DIR / '.env'))
 
-
-
+print(env.ENVIRON)
 
 SECRET_KEY = 'django-insecure-hogqcz1=(@fq$@npv0$+tlefmns*8_5&r8&v1duf_b+db3x4ng'
 
@@ -129,3 +133,21 @@ AUTHENTICATION_BACKENDS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  
 ]
+
+
+# settings.py
+
+# Email backend configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# SMTP server configuration
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+
+
+# Default from email address
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')

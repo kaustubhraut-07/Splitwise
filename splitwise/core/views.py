@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from django.core.mail import send_mail
 
 # ----------------------------user views -----------------------
 @api_view(['POST'])
@@ -39,8 +40,10 @@ def user_login(request):
     user = authenticate(request, email=email, password=password)
     if user is not None:
         login(request, user)
+        send_welcome_email()
         return Response({'message': 'User logged in successfully' , "data": UserSerializer(user).data})
     else:
+        
         return Response({'error': 'Invalid credentials'}, status=400)
 
 @api_view(['PUT'])
@@ -444,3 +447,19 @@ def get_all_settlements_in_group(request , id):
         "message": "Settlement found successfully",
         "data": seraliser.data    
     }, status=201)
+
+
+
+
+
+
+
+
+#-------------- Email Configurations --------------
+def send_welcome_email():
+    subject = 'Welcome to Our Service'
+    message = 'Thank you for signing up!'
+    from_email = 'kaustubhraut135@gmail.com'
+    recipient_list = ['kaustubhraut135@gmail.com']
+
+    send_mail(subject, message, from_email, recipient_list)
