@@ -130,7 +130,19 @@ def deleteuser_Info(request,id):
     }, status=400)
     
 
-
+@api_view(['GET'])
+def getAllUsersList(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+    if not users:
+        return Response({
+            "error": "Users not found"
+        }, status=400)
+    
+    return Response({
+        "message": "User found successfully",
+        "data": serializer.data
+    }, status=201)
 
 #---------------- Group Views ----------------
 @csrf_exempt
@@ -211,6 +223,7 @@ def get_group_user_present(request, id):
 @api_view(['PUT'])
 def add_user_to_group(request,id):
     group = Group.objects.get(id=id)
+    print(group , "group info")
     user_info = request.data.get('user_info')
 
    
@@ -219,11 +232,12 @@ def add_user_to_group(request,id):
             "error": "Group not found"
         }, status=400)
     group.users.add(user_info)
+    group.save()
     seraliser = GroupSerializer(group)
 
     return Response({
         "message": "Group found successfully",
-        "data": seraliser.data    
+        "data": seraliser.data   
     }, status=201)
 
 
