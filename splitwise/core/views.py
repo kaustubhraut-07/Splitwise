@@ -11,6 +11,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
 
 # ----------------------------user views -----------------------
 @api_view(['POST'])
@@ -129,20 +133,34 @@ def deleteuser_Info(request,id):
 
 
 #---------------- Group Views ----------------
+@csrf_exempt
 @api_view(['POST'])
 def create_group(request):
     groupname = request.data.get('groupName')
-    createduserdata = request.data.get('created_by')
+    createduserdata = request.data.get('created_by')  # ID of the user
 
+    # Create the group
     group = Group.objects.create(name=groupname)
-    seraliser = GroupSerializer(group)
-    group.users.add(createduserdata)
+
+    try:
+        # Fetch the User instance
+        user = User.objects.get(id=createduserdata)
+
+        # Add the user to the group
+        group.users.add(user)
+        group.save()
+    except User.DoesNotExist:
+        return Response({
+            "error": "User not found"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    # Serialize the group data
+    serializer = GroupSerializer(group)
 
     return Response({
         "message": "Group created successfully",
-        "data": seraliser.data
-    }, status=201)
-
+        "data": serializer.data
+    }, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
 def get_groups(request):
@@ -159,22 +177,36 @@ def get_groups(request):
     }, status=201)
     
 
+# @api_view(['GET'])
+# def get_group_user_present(request, id):
+#     # Fetch group or return 404
+#     group = get_object_or_404(Group, id=id)
+
+#     # Serialize group data
+#     serializer = GroupSerializer(group)
+
+#     # Return response
+#     return Response({
+#         "message": "Group found successfully",
+#         "data": serializer.data
+#     }, status=200)
+
 @api_view(['GET'])
-def get_group_user_present(request,id):
-    group = Group.objects.get(id=id)
-    if not group:
-        return Response({
-            "error": "Group not found"
-        }, status=400)
-    seraliser = GroupSerializer(group)
+def get_group_user_present(request, id):
+   
+    user = get_object_or_404(User, id=id)
 
+    
+    groups = user.split_groups.all() 
+
+    
+    serializer = GroupSerializer(groups, many=True)
+
+   
     return Response({
-        "message": "Group found successfully",
-        "data": seraliser.data    
-    }, status=201)
-
-
-
+        "message": "Groups retrieved successfully",
+        "data": serializer.data
+    }, status=200)
 
 @api_view(['PUT'])
 def add_user_to_group(request,id):
