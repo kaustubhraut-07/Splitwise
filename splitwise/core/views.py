@@ -256,6 +256,24 @@ def get_all_users_in_group(request,id):
         "data": seraliser.data[0]   
     }, status=201)
 
+
+@api_view(['GET'])
+def getGoupInfo(request,id):
+    group = Group.objects.get(id=id)
+    print(group , "group info")
+    seraliser = GroupSerializer(group)
+    if group is not None:
+           return Response({
+        "message": "Group found successfully",
+        "data": seraliser.data
+    }, status=201)
+ 
+    return Response({
+        "message": "No Group Found"
+        
+    }, status=400)
+
+
 #--------------------------------expenses view ---------------------
 
 @api_view(['POST'])
