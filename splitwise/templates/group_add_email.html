@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>You’ve Been Added to a Group</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0073e6;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p class="header">You’ve Been Added to a Group!</p>
+        <p>Hi <strong>{{ recipient_name }}</strong>,</p>
+        <p>We’re excited to let you know that you’ve been added to the group "<strong>{{ group_name }}</strong>" on <strong>{{ app_name }}</strong> by <strong>{{ admin_name }}</strong>!</p>
+        <p>Here’s what you can do:</p>
+        <ul>
+            <li>View and track expenses shared in the group.</li>
+            <li>Collaborate with other group members to settle balances.</li>
+            <li>Stay updated on shared activities within the group.</li>
+        </ul>
+        <p>Log in to your account to get started: <a href="{{ app_link }}" target="_blank">{{ app_link }}</a></p>
+        <p>If you have any questions or need assistance, feel free to contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
+        <div class="footer">
+            Best regards, <br>
+            The <strong>{{ app_name }}</strong> Team
+        </div>
+    </div>
+</body>
+</html>

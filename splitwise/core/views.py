@@ -15,7 +15,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
-
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 # ----------------------------user views -----------------------
 @api_view(['POST'])
 def user_registeration(request):
@@ -233,9 +234,10 @@ def add_user_to_group(request, id):
     
     try:
         user = User.objects.get(id=user_info)
+        print(user)
     except User.DoesNotExist:
         return Response({"error": "User not found."}, status=404)
-
+    send_group_add_email(user.email, user.name, group.name, user.name, group.name, 'http://localhost:5173/login' ,'support@gmail.com')
     group.users.add(user)
     group.save()
 
@@ -532,3 +534,26 @@ def send_welcome_email():
     recipient_list = ['kaustubhraut135@gmail.com']
 
     send_mail(subject, message, from_email, recipient_list)
+
+
+def send_group_add_email(recipient_email, recipient_name, group_name, admin_name, app_name, app_link, support_email):
+    subject = f"You’ve Been Added to a Group on {app_name}!"
+    html_message = render_to_string('group_add_email.html', {
+        'recipient_name': recipient_name,
+        'group_name': group_name,
+        'admin_name': admin_name,
+        'app_name': app_name,
+        'app_link': app_link,
+        'support_email': support_email
+    })
+    plain_message = strip_tags(html_message)
+    from_email = 'kaustubhraut135@gmail.com'
+    recipient_list = [recipient_email]
+
+    send_mail(
+        subject,
+        plain_message,
+        from_email,
+        recipient_list,
+        html_message=html_message
+    )
